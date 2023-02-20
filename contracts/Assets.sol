@@ -8,6 +8,7 @@ error NotOwner();
 error NotenoughToken();
 error AssetNotForSale();
 error OnlyAdmin();
+error AssetNotApproved();
 
 contract Assets {
     Deeds[] public assets;
@@ -37,6 +38,9 @@ contract Assets {
         if(msg.sender != owner) revert OnlyAdmin();
         _;
     }
+   
+     
+     
     //Make Sure that the amount is sufficient an dthe asset is for sale 
     modifier validator(uint _id){
         if(msg.value < assets[_id].value) revert NotenoughToken();
@@ -56,6 +60,19 @@ contract Assets {
         addressOwnerCount[msg.sender]++; 
         assetToAddressOwner[assets.length-1] = msg.sender;
     }
+
+    //mark asset as sellable
+    function sellProperty(uint _id) public {
+        if(assets[_id].approved == false) {revert AssetNotApproved();}
+        if (msg.sender != assets[_id]._address) {revert NotOwner();}
+        assets[_id].sell = true;
+    }
+
+    //This function approves the asset that is being entered, that it is legitimate ans true
+    function ApproveAsset(uint _id)public onlyOwner{
+        assets[_id].approved = true;
+    }
+
     // this function exchanges an asset for its current value
     function buy(uint _id) public payable validator(_id){
         address _address = assets[_id]._address;
@@ -76,13 +93,13 @@ contract Assets {
         assets[_id].sell = false;
         
     }
-    //This function approves the asset that is being entered, that it is legitimate ans true
-    function ApproveAsset(uint _id)public onlyOwner{
-        assets[_id].approved = true;
-    }
+    
 
     function getAllAssets() public view returns(Deeds[] memory){
         return assets;
+    }
+    function getmyAsset(uint _id)public view returns(Deeds memory){
+        return assets[_id];
     }
 
     //this function retreives owners assets
@@ -97,11 +114,7 @@ contract Assets {
             }
         } return array;
     }
-    //mark asset as sellable
-    function sellProperty(uint _id) public {
-        if (msg.sender != assets[_id]._address) revert NotOwner();
-        assets[_id].sell = true;
-    }
+    
     //create a function that updates the value of an asset
     function updateValue(uint _id)public{}
 
@@ -109,4 +122,3 @@ contract Assets {
     function partOwnership()public{}
     function giftOwnership()public{}
 }
-

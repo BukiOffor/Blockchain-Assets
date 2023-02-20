@@ -23,3 +23,5 @@ module.exports.default = async ({deployments}) => {
         await verify(assets.address,[])
     }
 }
+
+module.exports.tags = ["Assets"]

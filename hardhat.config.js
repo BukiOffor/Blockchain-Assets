@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-deploy")
+require("hardhat-deploy");
 require("hardhat-gas-reporter");
+require("@nomicfoundation/hardhat-chai-matchers");
 require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -40,6 +41,12 @@ module.exports = {
   namedAccounts : {
     deployer : {
         default:0
+    },
+    seller : {
+      default : 1
+    },
+    buyer : {
+      default: 2
     }
   }
 };
