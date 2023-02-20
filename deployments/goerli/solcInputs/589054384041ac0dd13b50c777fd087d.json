@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Assets.sol": {
+      "content": "// SPDX-License-Identifier: MIT\n\n//This Script might not be just for lands or assets it might be things that have value and can be backed with a physical property\n//implement a loan system where can borrow and put there assests as a collatarel \npragma solidity ^0.8.17;\n\nerror NotOwner();\nerror NotenoughToken();\nerror AssetNotForSale();\nerror OnlyAdmin();\nerror AssetNotApproved();\n\ncontract Assets {\n    Deeds[] public assets;\n    mapping(address=>Deeds) public ownersToDeeds;\n    mapping(address=>uint)public addressOwnerCount;\n    mapping(uint => address)public assetToAddressOwner;\n    \n    event soldAsset(address formerOwner, uint assetId, address newOwner, uint time);\n    \n    address owner;\n    \n    constructor(){\n        owner = msg.sender;\n    }\n\n    struct Deeds {\n        address payable _address;\n        string location;\n        uint geo_location;\n        uint plot;\n        uint value;\n        uint time;\n        bool sell;\n        bool approved;\n    }\n    modifier onlyOwner() {\n        if(msg.sender != owner) revert OnlyAdmin();\n        _;\n    }\n   \n     \n     \n    //Make Sure that the amount is sufficient an dthe asset is for sale \n    modifier validator(uint _id){\n        if(msg.value < assets[_id].value) revert NotenoughToken();\n        if(assets[_id].sell != true) revert AssetNotForSale();\n        _;\n        //require(msg.value >= assets[_id].value, \"Insuficient amount to obtain asset\");\n        //require(assets[_id].sell == true, \"Asset is not for sale\");\n        // require(msg.sender == owner);\n        //if (msg.sender != assets[_id]._address) revert NotOwner(); \n    }\n    //This function creates ownership of an asset\n    // might only be called by the onlyOwner modifier in future\n    function getOwnership(string memory location, uint geo_location,uint plot, uint value) public{\n        Deeds memory _deed = Deeds( payable(msg.sender),location, geo_location,plot,value,block.timestamp,false,false);\n        assets.push(_deed);\n        ownersToDeeds[msg.sender] = _deed;\n        addressOwnerCount[msg.sender]++; \n        assetToAddressOwner[assets.length-1] = msg.sender;\n    }\n\n    //mark asset as sellable\n    function sellProperty(uint _id) public {\n        if(assets[_id].approved == false) {revert AssetNotApproved();}\n        if (msg.sender != assets[_id]._address) {revert NotOwner();}\n        assets[_id].sell = true;\n    }\n\n    //This function approves the asset that is being entered, that it is legitimate ans true\n    function ApproveAsset(uint _id)public onlyOwner{\n        assets[_id].approved = true;\n    }\n\n    // this function exchanges an asset for its current value\n    function buy(uint _id) public payable validator(_id){\n        address _address = assets[_id]._address;\n        (bool sent,) =_address.call{value: msg.value}(\"\");\n        require(sent);\n        assets[_id].value = msg.value; \n        transferOwnership(_id);\n        emit soldAsset(_address,_id,msg.sender,block.timestamp);\n    }\n    //Transfers ownership of an asset and updates mappings and variables\n    function transferOwnership(uint _id) private { \n        address _address = assets[_id]._address;\n        addressOwnerCount[_address]--; \n        assets[_id]._address = payable(msg.sender);\n        addressOwnerCount[msg.sender]++;\n        assetToAddressOwner[_id] = msg.sender;\n        ownersToDeeds[msg.sender] = assets[_id];\n        assets[_id].sell = false;\n        \n    }\n    \n\n    function getAllAssets() public view returns(Deeds[] memory){\n        return assets;\n    }\n    function getmyAsset(uint _id)public view returns(Deeds memory){\n        return assets[_id];\n    }\n\n    //this function retreives owners assets\n    function retrieveOwnersAssets(address _address)public view returns(uint[] memory){\n        uint[] memory array =  new uint[](addressOwnerCount[_address]);\n        uint counter = 0;\n        for (uint i = 0; i < assets.length; i++) \n        {\n            if(assetToAddressOwner[i] == _address){\n               array[counter] = i;\n                counter++;\n            }\n        } return array;\n    }\n    \n    //create a function that updates the value of an asset\n    function updateValue(uint _id)public{}\n\n    function inheritOwnership() public{}\n    function partOwnership()public{}\n    function giftOwnership()public{}\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

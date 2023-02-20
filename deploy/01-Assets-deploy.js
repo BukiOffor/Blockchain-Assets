@@ -14,7 +14,7 @@ module.exports.default = async ({deployments}) => {
         from: deployer,
         args: [],
         log: true,
-        waitConfirmations: network.config.blockConifrmations || 1,
+        waitConfirmations: network.config.blockConfirmations || 1,
     })
     log("_____contract deployed________")
     log(`***********verifying ${assets.address}**********`)
