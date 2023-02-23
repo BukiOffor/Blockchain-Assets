@@ -56,7 +56,6 @@ describe("Assets", ()=>{
 
     describe("buy",()=>{
         let sellerAccount,receipt,buyerAccount;
-
         beforeEach(async ()=>{
             buyerAccount = await assets.connect(buyer)
             sellerAccount = await assets.connect(seller)
@@ -85,7 +84,6 @@ describe("Assets", ()=>{
         })
         
     })
-
     describe("transferOwnership", ()=>{
         beforeEach(async()=>{
             const buyerAccount = await assets.connect(buyer)
@@ -105,7 +103,6 @@ describe("Assets", ()=>{
             assert.equal(soldAsset.sell,false)
         })
     })
-
     describe("retrieveOwnerAssets", ()=>{
         it("should return every asset that an address owns", async()=>{
             for (let i = 0; i<5; i++) {await assets.getOwnership("Awka",110,3,sendvalue)}
