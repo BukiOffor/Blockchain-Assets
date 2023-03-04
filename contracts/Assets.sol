@@ -26,9 +26,9 @@ contract Assets {
 
     struct Deeds {
         address payable _address;
-        string location;
+        string propertyDescription;
         uint geo_location;
-        uint plot;
+        uint appxArea;
         uint value;
         uint time;
         bool sell;
@@ -53,8 +53,8 @@ contract Assets {
     }
     //This function creates ownership of an asset
     // might only be called by the onlyOwner modifier in future
-    function getOwnership(string memory location, uint geo_location,uint plot, uint value) public{
-        Deeds memory _deed = Deeds( payable(msg.sender),location, geo_location,plot,value,block.timestamp,false,false);
+    function getOwnership(string memory propertyDescription, uint geo_location,uint appxArea, uint value) public{
+        Deeds memory _deed = Deeds( payable(msg.sender),propertyDescription, geo_location,appxArea,value,block.timestamp,false,false);
         assets.push(_deed);
         ownersToDeeds[msg.sender] = _deed;
         addressOwnerCount[msg.sender]++; 
@@ -90,8 +90,7 @@ contract Assets {
         addressOwnerCount[msg.sender]++;
         assetToAddressOwner[_id] = msg.sender;
         ownersToDeeds[msg.sender] = assets[_id];
-        assets[_id].sell = false;
-        
+        assets[_id].sell = false;   
     }
     
 
@@ -117,8 +116,12 @@ contract Assets {
     
     //create a function that updates the value of an asset
     function updateValue(uint _id)public{}
+    // Issue Deeds online, maybe in form of nfts
+    function issueDeeds()public{}
 
     function inheritOwnership() public{}
     function partOwnership()public{}
     function giftOwnership()public{}
+    // title number, approximate area,
+    // Create functions to update off-chain databases based on blockchain events 
 }

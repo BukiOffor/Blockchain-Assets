@@ -17,9 +17,10 @@ module.exports.default = async ({deployments}) => {
         waitConfirmations: network.config.blockConfirmations || 1,
     })
     log("_____contract deployed________")
-    log(`***********verifying ${assets.address}**********`)
+  
 
     if(!developmentChains.includes(network.name)) {
+        log(`***********verifying ${assets.address}**********`)
         await verify(assets.address,[])
     }
 }
