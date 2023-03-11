@@ -12,7 +12,7 @@ error AssetNotApproved();
 
 contract Assets {
     Deeds[] public assets;
-    mapping(address=>Deeds) public ownersToDeeds;
+    mapping(address=>Deeds[]) public ownersToDeeds;
     mapping(address=>uint)public addressOwnerCount;
     mapping(uint => address)public assetToAddressOwner;
     
@@ -56,7 +56,7 @@ contract Assets {
     function getOwnership(string memory propertyDescription, uint geo_location,uint appxArea, uint value) public{
         Deeds memory _deed = Deeds( payable(msg.sender),propertyDescription, geo_location,appxArea,value,block.timestamp,false,false);
         assets.push(_deed);
-        ownersToDeeds[msg.sender] = _deed;
+        ownersToDeeds[msg.sender].push(_deed);
         addressOwnerCount[msg.sender]++; 
         assetToAddressOwner[assets.length-1] = msg.sender;
     }
