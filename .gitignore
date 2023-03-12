@@ -4,6 +4,7 @@ coverage.json
 typechain
 typechain-types
 package-lock.json
+.env
 # Hardhat files
 cache
 artifacts
@@ -19,4 +20,4 @@ typechain-types
 # Hardhat files
 cache
 artifacts
-
+.env
