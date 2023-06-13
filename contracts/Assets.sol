@@ -38,9 +38,7 @@ contract Assets {
         if(msg.sender != owner) revert OnlyAdmin();
         _;
     }
-   
-     
-     
+    
     //Make Sure that the amount is sufficient an dthe asset is for sale 
     modifier validator(uint _id){
         if(msg.value < assets[_id].value) revert NotenoughToken();

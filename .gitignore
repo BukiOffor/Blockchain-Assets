@@ -6,18 +6,9 @@ typechain-types
 package-lock.json
 .env
 # Hardhat files
+
 cache
 artifacts
+gas_reporter.txt
+package-lock.json
 
-
-node_modules
-
-coverage
-coverage.json
-typechain
-typechain-types
-
-# Hardhat files
-cache
-artifacts
-.env

@@ -6,8 +6,8 @@ describe("Assets", ()=>{
     let assets, deployer,sendvalue,buyer,seller, accounts;
     beforeEach(async ()=>{
         deployer = (await getNamedAccounts()).deployer
-        accounts = await ethers.getSigners()
-        buyer = accounts[1]
+        accounts = await ethers.getSigners() // get primary keys
+        buyer = accounts[1] //primary key
         seller = accounts[2]
         await deployments.fixture()
         assets = await ethers.getContract("Assets", deployer)
